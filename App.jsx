@@ -1,0 +1,46 @@
+import Routes from './src/navigation/Routes';
+import { Provider } from 'react-redux';
+import store from './src/redux/store';
+import { useEffect } from 'react';
+import { getData } from './src/utlis/helperFunction';
+import FlashMessage from 'react-native-flash-message';
+const App = () => {
+  const { dispatch } = store;
+  useEffect(() => {
+    initiateLang();
+    initiateTheme();
+  }, []);
+  const initiateTheme = async () => {
+    try {
+      let myTheme = await getData('theme');
+      if (!!myTheme) {
+        changeAppTheme(myTheme);
+      }
+console.log(myTheme)
+
+    } catch (error) {
+      console.log('no data found');
+    }
+  };
+  const initiateLang = async () => {
+    try {
+      let myLang = await getData('language');
+      if (!!myLang) {
+        changeLanguage(myLang);
+      }
+  console.log(myLang)
+
+    } catch (error) {
+      console.log('no data found');
+    }
+  };
+  
+  return (
+    <Provider store={store}>
+      <Routes />
+      <FlashMessage position="center" autoHide={true} animationDuration={20} />
+    </Provider>
+  );
+};
+
+export default App;
