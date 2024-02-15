@@ -4,7 +4,7 @@ const appSettingSlice = createSlice({
   name: 'appSetting',
   initialState: {
     lang: 'en',
-    isDark: true,
+    isDark: false,
   },
   reducers: {
     changeLang: (state, action) => {

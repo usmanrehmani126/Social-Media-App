@@ -7,13 +7,11 @@ import {
   TouchableNativeFeedback,
   Keyboard,
   StyleSheet,
-  Pressable,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import WrapperContainer from '../../components/WrapperComponent';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import strings from '../../constants/lang';
-import TextinputComponent from '../../components/TextinputComponent';
 import {
   moderateScale,
   moderateScaleVertical,
@@ -22,15 +20,22 @@ import CustomButton from '../../components/CustomButton';
 import {useSelector} from 'react-redux';
 import OTPTextView from 'react-native-otp-textinput';
 import colors from '../../utlis/colors';
+import {useRoute} from '@react-navigation/native';
+import validations from '../../utlis/validations';
+import {showError} from '../../utlis/helperFunction';
+import {otpVerify} from '../../redux/actions/auth';
+import store from '../../redux/store';
+import {saveUserData} from '../../redux/reducers/auth';
 
 const OtpScreen = ({navigation}) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [secureText, setSecureText] = useState(true);
   const [otpInput, setOtpInput] = useState('');
   const [timer, setTimer] = useState(5);
   const isDarKTheme = useSelector(state => state.appSetting.isDark);
   const input = useRef(null);
+  const route = useRoute();
+  const [isLoading, setIsLoading] = useState(false);
+  const {data} = route?.params || {};
+  const {dispatch} = store;
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (timer > 0) setTimer(timer - 1);
@@ -44,6 +49,38 @@ const OtpScreen = ({navigation}) => {
   const handleCellTextChange = async (text, i) => {};
   const onPressResend = () => {
     setTimer(5);
+  };
+
+  const isValidData = () => {
+    const error = validations({
+      otp: otpInput,
+    });
+    if (error) {
+      showError(error);
+      return false;
+    }
+    return true;
+  };
+  const onDone = async () => {
+    const checkValid = isValidData();
+    if (checkValid) {
+      setIsLoading(true);
+      try {
+        const res = await otpVerify(
+          {
+            email: data.email,
+            otp: otpInput,
+          },
+          data.token,
+        );
+        setIsLoading(false);
+        navigation.navigate('Main');
+      } catch (error) {
+        console.log('error in login api', error);
+        showError(error?.error);
+        setIsLoading(false);
+      }
+    }
   };
 
   return (
@@ -104,8 +141,9 @@ const OtpScreen = ({navigation}) => {
                 )}
               </TouchableOpacity>
               <CustomButton
+                isLoading={isLoading}
                 text={strings.DONE}
-                onPress={() => console.log('pressed')}
+                onPress={() => onDone()}
               />
             </View>
           </View>

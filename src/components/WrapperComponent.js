@@ -6,7 +6,6 @@ const WrapperContainer = ({style = {}, children}) => {
   const isDark = useSelector(state => state.appSetting.isDark);
   return (
     <>
-      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
       <View
         style={{
           ...styles.container,

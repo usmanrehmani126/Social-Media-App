@@ -10,8 +10,10 @@ import NotificationScreen from '../Tabs/NotificationScreen';
 import Profile from '../Tabs/Profile';
 import Home from './Home';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 const Main = () => {
+  const {isDark, lang} = useSelector(state => state.appSetting);
   const navigation = useNavigation();
   const [selected, setSelected] = useState(0);
   return (
@@ -24,11 +26,9 @@ const Main = () => {
         <NotificationScreen />
       ) : selected == 3 ? (
         <Profile />
-      ) : selected == 4 ? (
-        <CreatePost />
       ) : null}
 
-      <View style={styles.bottomView}>
+      <View style={styles.bottomView(isDark)}>
         <Pressable
           onPress={() => {
             setSelected(0);
@@ -43,7 +43,7 @@ const Main = () => {
           <Foundation
             name="home"
             size={24}
-            color={true ? '#F9622E' : '#797979'}
+            color={selected == 0 ? '#F9622E' : '#797979'}
           />
         </Pressable>
         <Pressable
@@ -66,7 +66,7 @@ const Main = () => {
         <TouchableOpacity
           style={styles.bottomTabSeparate}
           onPress={() => {
-            setSelected(4);
+            navigation.navigate('CreatePost');
           }}>
           <Ionicons name={'add-circle-outline'} size={26} color={'white'} />
         </TouchableOpacity>
@@ -112,10 +112,10 @@ const Main = () => {
 export default Main;
 
 const styles = StyleSheet.create({
-  bottomView: {
+  bottomView: isDark => ({
     width: '100%',
-    height: 60,
-    backgroundColor: 'white',
+    height: 50,
+    backgroundColor: isDark ? 'black' : 'white',
     position: 'absolute',
     bottom: 0,
     flexDirection: 'row',
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-  },
+  }),
   bottomTab: {
     width: '15%',
     height: '100%',

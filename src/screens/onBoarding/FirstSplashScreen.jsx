@@ -4,13 +4,19 @@ import Foundation from 'react-native-vector-icons/Foundation';
 import WrapperContainer from '../../components/WrapperComponent';
 import {useSelector} from 'react-redux';
 import fontFamily from '../../utlis/fontFamily';
+import {useNavigation} from '@react-navigation/native';
 
-const FirstSplashScreen = ({navigation}) => {
+const FirstSplashScreen = () => {
   const isDarKTheme = useSelector(state => state.appSetting.isDark);
+  const userData = useSelector(state => state.auth.userData);
+  const navigation = useNavigation();
+  console.log(userData);
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate('SecondSplash');
-    }, 3000);
+      !!userData?.token
+        ? navigation.navigate('Main')
+        : navigation.navigate('SecondSplashScreen');
+    }, 2000);
   });
   return (
     <WrapperContainer>

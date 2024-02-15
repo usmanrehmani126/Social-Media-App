@@ -1,4 +1,11 @@
-import {Image, Pressable, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 
 const CustomButton = ({
@@ -6,7 +13,7 @@ const CustomButton = ({
   text = '',
   leftImg = null,
   textStyle = {},
-  isLoading = false,
+  isLoading ,
 }) => {
   return (
     <View style={{alignSelf: 'center', width: 300}}>
@@ -21,7 +28,13 @@ const CustomButton = ({
             resizeMode="contain"
           />
         ) : null}
-        <Text className="text-white text-md  font-[Poppins-Bold]">{text}</Text>
+        {isLoading ? (
+          <ActivityIndicator size={'small'} color={'white'} />
+        ) : (
+          <Text className="text-white text-md  font-[Poppins-Bold]">
+            {text}
+          </Text>
+        )}
       </TouchableOpacity>
     </View>
   );

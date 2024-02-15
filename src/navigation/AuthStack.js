@@ -5,17 +5,18 @@ import FirstSplashScreen from '../screens/onBoarding/FirstSplashScreen';
 import SecondSplashScreen from '../screens/onBoarding/SecondSplashScreen';
 import OtpScreen from '../screens/otpScreen/OtpScreen';
 import WebViewScreen from '../screens/webview/WebViewScreen';
+import Main from '../screens/Home/Main';
 
 export default function (Stack) {
   return (
     <>
-     <Stack.Screen
-        name={'FirstSplash'}
+      <Stack.Screen
+        name={'FirstSplashScreen'}
         component={FirstSplashScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name={'SecondSplash'}
+        name={'SecondSplashScreen'}
         component={SecondSplashScreen}
         options={{headerShown: false}}
       />
@@ -24,7 +25,6 @@ export default function (Stack) {
         component={LoginScreen}
         options={{headerShown: false}}
       />
-
       <Stack.Screen
         name={'RegisterScreen'}
         component={RegisterScreen}
@@ -34,13 +34,17 @@ export default function (Stack) {
         name={'OtpScreen'}
         component={OtpScreen}
         options={{headerShown: false}}
-      /> 
+      />
       <Stack.Screen
         name={'WebViewScreen'}
         component={WebViewScreen}
         options={{headerShown: false}}
       />
-     
+       <Stack.Screen
+        name={'Main'}
+        component={Main}
+        options={{headerShown: false}}
+      />
     </>
   );
 }

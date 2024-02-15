@@ -20,11 +20,13 @@ import CustomButton from '../../components/CustomButton';
 import {useSelector} from 'react-redux';
 import {showError} from '../../utlis/helperFunction';
 import validator from '../../utlis/validations';
+import {userLogin} from '../../redux/actions/auth';
 
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [secureText, setSecureText] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const isDarKTheme = useSelector(state => state.appSetting.isDark);
 
   const isValidData = () => {
@@ -41,24 +43,28 @@ const LoginScreen = ({navigation}) => {
   const onLogin = async () => {
     const checkValid = isValidData();
     if (checkValid) {
-      // setLoading(true);
+      setIsLoading(true);
       try {
         const res = await userLogin({
           email,
           password,
         });
         console.log('login api res', res);
-        // setLoading(false);
+        setIsLoading(false);
+        
         if (!!res.data && !res?.data?.validOTP) {
-          navigation.navigate(navigationStrings.OTP_VERIFICATION, {
+          navigation.navigate('OtpScreen', {
             data: res.data,
           });
-          return;
         }
+        // else{
+        //   navigation.navigate('Main');
+        // }
+        
       } catch (error) {
         console.log('error in login api', error);
-        showError(error);
-        // setLoading(false);
+        showError(error?.error);
+        setIsLoading(false);
       }
     }
   };
@@ -112,7 +118,11 @@ const LoginScreen = ({navigation}) => {
               </View>
             </View>
             <View className="flex-[0.2] justify-end">
-              <CustomButton text={strings.LOGIN} onPress={() => onLogin()} />
+              <CustomButton
+                isLoading={isLoading}
+                text={strings.LOGIN}
+                onPress={() => onLogin()}
+              />
             </View>
           </View>
         </TouchableNativeFeedback>
